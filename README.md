@@ -1,4 +1,5 @@
 A simple graph with basic functions.
+< br/>
 To initialize a graph
 g = Graph()
 
