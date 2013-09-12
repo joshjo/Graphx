@@ -1,30 +1,40 @@
 from random import random, choice, randint
 from copy import copy
+from collections import deque, Counter
 
-class Node:
+class Node(object):
 	def __init__ (self, data):
 		self.data = data
 		self.edges = set()
 
 	def __repr__ (self):
 		return str (self.data)
-		# return 'Node: ' + str (self.data) + ': ' + str(self.edges) + '\n'
 
 	def __cmp__ (self, other):
-		if self.data < other.data: return -1
-		if self.data == other.data: return 0
-		return 1
+		if type (other) == Node:
+			return cmp(self.data, other.data)
+		else:
+			raise TypeError("Node cannot be compared to %s" % str(type(other)))
+
+	def __eq__(self, other): 
+		if type(other) == Node and cmp(self.data, other.data) == 0:
+			return True
+		return False
+
+	def __ne__ (self, other):
+			return not self.__eq__(other)
+
 
 	def __hash__ (self):
 		return hash(self.data)
 
-class Edge:
+class Edge(object):
 	def __init__ (self, from_node, to_node, data):
 		self.data = data
 		self.from_node = from_node
 		self.to_node = to_node
 
-	def __cmp__ (self, other):
+	def __cmp__ (self, other):		
 		if self.data < other.data: return -1
 		if self.data == other.data: return 0
 		return 1
@@ -35,10 +45,7 @@ class Edge:
 	def __hash__ (self):
 		return hash(self.from_node) ^ hash(self.data) ^ hash(self.to_node)
 
-def test_fun():
-	print "Hello Package"
-
-class Graphx:
+class Graphx(object):
 	def __init__ (self, is_directed = False):
 		self.edges = set()
 		self.nodes = set()
@@ -73,6 +80,33 @@ class Graphx:
 		for node in L:
 			self.add_node (node)
 
+	def get_best_path (self, begin, target):
+		begin_node = self.find_node(begin)
+		target_node = self.find_node(target)
+		if begin_node == None or target_node == None:
+			raise BaseException("Begin or target node doesn't exist.")
+		matrix = {}		
+		for i_node in self.nodes:
+			tmp = {}
+			for j_node in self.nodes:
+				tmp[j_node] = float ("inf")
+			matrix[i_node] = tmp
+
+		for edge in self.edges:
+			print edge
+		# 	matrix[edge.from_node][edge.to_node] = edge.data
+		# 	matrix[edge.to_node][edge.from_node] = edge.data
+
+		# for i_node in self.nodes:
+		# 	for j_node in self.nodes:
+		# 		for k_node in self.nodes:
+		# 			dt = matrix[i_node][j_node] + matrix[k_node][j_node]
+		# 			print dt
+		# 			if matrix[i_node][j_node] > dt:
+		# 				matrix[i_node][j_node] = dt
+
+		print matrix
+
 	def find_node (self, node, by_data = True):
 		for n in self.nodes:
 			if by_data:
@@ -101,7 +135,6 @@ class Graphx:
 		X.append(x), Y.remove(x)
 		mst.add_node (x.data)
 		while len(Y) > 0:
-
 			for edge in edges:				
 				if edge.from_node in X and edge.to_node in Y:
 					mst.add_node (edge.to_node.data)
@@ -121,7 +154,12 @@ if __name__ == '__main__':
 	n2 = g.add_node(2)
 	n3 = g.add_node(3)
 	n4 = g.add_node(4)
-	g.make_full_connected(fun = lambda x, y: abs(x- y))
+	g.make_full_connected(fun = lambda x, y: abs(x - y))
+	# print g.nodes
+	# print g.edges
+
+	# print type (g)
+	# g.get_best_path(1, 2)
 	# print g.nodes
 	# g.add_edge(from_node = n1, to_node = n2, by_data = False, distance = 0.7)
 	# g.add_edge(from_node = n2, to_node = n3, by_data = False, distance = 0.4)
