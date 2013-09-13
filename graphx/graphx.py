@@ -148,6 +148,8 @@ class Graphx(object):
 					break
 		return mst
 
+print "HAAAA"
+
 if __name__ == '__main__':
 	g = Graphx()
 	n1 = g.add_node(1)
@@ -155,8 +157,8 @@ if __name__ == '__main__':
 	n3 = g.add_node(3)
 	n4 = g.add_node(4)
 	g.make_full_connected(fun = lambda x, y: abs(x - y))
-	# print g.nodes
-	# print g.edges
+	print g.nodes
+	print g.edges
 
 	# print type (g)
 	# g.get_best_path(1, 2)
