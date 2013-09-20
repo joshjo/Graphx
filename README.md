@@ -54,7 +54,7 @@ g.add_edge(node_a, node_b, distance = 3, by_data = False)
 ```
 
 There are two extra functions meanwhile.
-### Minimal Search Tree
+### Minimal Spanning Tree
 Simple as:
 ```sh
 g.MST()
