@@ -43,7 +43,7 @@ class Edge(object):
 		return "| data: " + str (self.data) + ", from node: " +  str (self.from_node.data) + ", to node: " + str (self.to_node.data) + " |"
 
 	def __hash__ (self):
-		return hash(self.from_node) ^ hash(self.data) ^ hash(self.to_node)
+		return hash(self.data) ^ hash( (self.to_node, self.from_node) )
 
 class Graphx(object):
 	def __init__ (self, is_directed = False):
@@ -125,6 +125,15 @@ class Graphx(object):
 				if i_node == j_node: continue
 				distance = 0 if fun == None else fun(i_node.data, j_node.data)
 				self.add_edge(i_node, j_node, by_data = False, distance = distance)
+		self.full_connected = True
+
+	def make_knn (self, k):
+		new_edges = []
+		for node in self.nodes:
+			node.edges = set(sorted (node.edges, key = Node)[:k])
+			new_edges += node.edges
+		self.edges = set(new_edges)
+		self.is_directed = True
 
 	def MST (self):
 		Y = list (self.nodes)
@@ -148,28 +157,32 @@ class Graphx(object):
 					break
 		return mst
 
-print "HAAAA"
-
 if __name__ == '__main__':
 	g = Graphx()
-	n1 = g.add_node(1)
-	n2 = g.add_node(2)
-	n3 = g.add_node(3)
-	n4 = g.add_node(4)
-	g.make_full_connected(fun = lambda x, y: abs(x - y))
-	print g.nodes
+	n1 = g.add_node('a')
+	n2 = g.add_node('b')
+	n3 = g.add_node('c')
+	n4 = g.add_node('d')
+	g.make_full_connected()
+	# print g.nodes
 	print g.edges
 
 	# print type (g)
 	# g.get_best_path(1, 2)
 	# print g.nodes
 	# g.add_edge(from_node = n1, to_node = n2, by_data = False, distance = 0.7)
+	# g.add_edge(from_node = n2, to_node = n1, by_data = False, distance = 0.3)
 	# g.add_edge(from_node = n2, to_node = n3, by_data = False, distance = 0.4)
+	# g.add_edge(from_node = n3, to_node = n2, by_data = False, distance = 0.5)
 	# g.add_edge(from_node = n2, to_node = n4, by_data = False, distance = 0.6)
+	# g.add_edge(from_node = n4, to_node = n2, by_data = False, distance = 0.8)
 	# g.add_edge(from_node = n1, to_node = n4, by_data = False, distance = 0.2)
+	# g.add_edge(from_node = n4, to_node = n1, by_data = False, distance = 0.4)
 	# g.add_edge(from_node = n4, to_node = n3, by_data = False, distance = 0.3)
-	# print "g.nodes", g.nodes
-	# print "g.edges", g.edges
+	g.make_knn(k = 1)
+	print "g.nodes", g.nodes
+	print "g.nodes", list(g.nodes)[2].edges
+	print "g.edges", g.edges
 	# print "--------------------- MST -----------------------"
 	# mst = g.MST()
 	# print "mst.nodes", mst.nodes
