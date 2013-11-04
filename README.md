@@ -46,6 +46,7 @@ It add an edge from node 'a' to node 'b' with a distance 3.
 You can be more explicit and do:
 ```sh
 g.add_edge(distance = 3, from_node = 'a', to_node = 'b')
+```
 
 ## There are three extra functions meanwhile.
 ### Minimal Spanning Tree MST
